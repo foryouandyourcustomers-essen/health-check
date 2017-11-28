@@ -29,7 +29,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FyaycHealthIndicator
+public class CustomHealthIndicator
     implements HealthIndicator,
     ApplicationContextAware,
     ApplicationListener<ContextRefreshedEvent> {
