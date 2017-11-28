@@ -42,4 +42,9 @@ The way of using this software is rather straight forward. Import the dependency
 
 and add the properties to your property file. At the moment the software is still not published to the maven repository so, for using it you have to clone the repo and run `mvn install`.
 
+### Test
 
+There are two ways of testing:
+
+1. By running the test with maven.
+2. Starting up the application and going to `localhost:8080/health`. This should show a json with the status of the application, including the extra health information.
