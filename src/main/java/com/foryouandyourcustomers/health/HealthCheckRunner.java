@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan("com.foryouandyourcustomers.health")
 @EnableScheduling
 public class HealthCheckRunner {
-
   public static void main(String[] args) {
     SpringApplication.run(HealthCheckRunner.class, args);
   }

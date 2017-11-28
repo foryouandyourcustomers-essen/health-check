@@ -6,10 +6,12 @@ import static com.foryouandyourcustomers.health.HealthCheckType.ONCE;
 import static com.foryouandyourcustomers.health.HealthCheckType.SHORT;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -29,10 +31,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class FyaycHealthIndicator
     implements HealthIndicator,
-        ApplicationContextAware,
-        ApplicationListener<ContextRefreshedEvent> {
+    ApplicationContextAware,
+    ApplicationListener<ContextRefreshedEvent> {
 
-  private ConcurrentMap<String, Boolean> healthStatus;
+  private ConcurrentMap<String, HealthDescription> healthStatus;
   private List<Method> runOnlyOnceMethods;
   private List<Method> shortScheduledMethods;
   private List<Method> mediumScheduledMethods;
@@ -49,7 +51,11 @@ public class FyaycHealthIndicator
 
     this.healthStatus.keySet().forEach(key -> builder.withDetail(key, this.healthStatus.get(key)));
 
-    if (healthStatus.values().contains(false)) {
+    HealthDescription other = new HealthDescription();
+    other.setUp(true);
+    HealthDescription description = healthStatus.values().stream().filter(v -> !v.isUp()).findFirst().orElse(other);
+
+    if (!description.isUp()) {
       return builder.down().build();
     }
 
@@ -61,6 +67,10 @@ public class FyaycHealthIndicator
     this.applicationContext = applicationContext;
     this.healthStatus = Maps.newConcurrentMap();
 
+    if (Strings.isNullOrEmpty(healthCheckPackage)) {
+      healthCheckPackage = "";
+    }
+
     Reflections reflections =
         new Reflections(
             new ConfigurationBuilder()
@@ -68,7 +78,11 @@ public class FyaycHealthIndicator
                 .setScanners(new MethodAnnotationsScanner()));
     Set<Method> methods = reflections.getMethodsAnnotatedWith(HealthCheck.class);
 
-    methods.forEach(m -> healthStatus.put(m.getName(), false));
+    methods.forEach(m -> {
+      HealthDescription description = new HealthDescription();
+      description.setMethodName(m.getName());
+      healthStatus.put(m.getName(), description);
+    });
 
     runOnlyOnceMethods = getMethods(methods, ONCE);
     shortScheduledMethods = getMethods(methods, SHORT);
@@ -102,13 +116,24 @@ public class FyaycHealthIndicator
   private void executeMethods(List<Method> methods) {
     methods.forEach(
         m -> {
+          HealthDescription description = healthStatus.get(m.getName());
+          description.setLastStart(new Date());
           try {
             m.invoke(applicationContext.getBean(m.getDeclaringClass()));
-            healthStatus.put(m.getName(), true);
+            healthStatus.put(m.getName(), setDescription(description, true, "UP", ""));
           } catch (Exception e) {
-            healthStatus.put(m.getName(), false);
+            healthStatus.put(m.getName(), setDescription(description, false, "DOWN", e.getCause().getMessage()));
           }
         });
+  }
+
+  private HealthDescription setDescription(HealthDescription healthDescription, boolean up, String status, String description) {
+    healthDescription.setUp(up);
+    Date lastStart = healthDescription.getLastStart();
+    healthDescription.setRunDuration(new Date().getTime() - lastStart.getTime());
+    healthDescription.setStatus(status);
+    healthDescription.setDescription(description);
+    return healthDescription;
   }
 
   private List<Method> getMethods(Set<Method> methods, HealthCheckType type) {

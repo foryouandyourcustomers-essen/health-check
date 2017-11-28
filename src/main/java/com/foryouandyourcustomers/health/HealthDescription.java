@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HealthDescription {
 
+  private boolean up = false;
   private String methodName;
   private String status;
   private Date lastStart;
@@ -50,6 +51,14 @@ public class HealthDescription {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public boolean isUp() {
+    return up;
+  }
+
+  public void setUp(boolean up) {
+    this.up = up;
   }
 
   @Override
