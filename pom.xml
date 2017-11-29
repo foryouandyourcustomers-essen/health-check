@@ -7,10 +7,6 @@
     <groupId>com.foryouandyourcustomers</groupId>
     <artifactId>health-check</artifactId>
     <version>1.0</version>
-    <organization>
-        <name>foryouandyourcustomers</name>
-        <url>https://www.foryouandyourcustomers.com/</url>
-    </organization>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -18,13 +14,10 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.8.RELEASE</version>
-        <relativePath/>
-    </parent>
+    <organization>
+        <name>foryouandyourcustomers</name>
+        <url>https://www.foryouandyourcustomers.com/</url>
+    </organization>
     <developers>
         <developer>
             <name>Federico José Sörenson Sánchez</name>
@@ -32,6 +25,13 @@
             <organizationUrl>https://fes.foryouandyourcustomers.com</organizationUrl>
         </developer>
     </developers>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.8.RELEASE</version>
+        <relativePath/>
+    </parent>
     <dependencies>
         <dependency>
             <groupId>org.reflections</groupId>

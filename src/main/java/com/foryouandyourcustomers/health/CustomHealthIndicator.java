@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.reflections.Reflections;
@@ -115,14 +116,15 @@ public class CustomHealthIndicator
 
   private void executeMethods(List<Method> methods) {
     methods.forEach(
-        m -> {
-          HealthDescription description = healthStatus.get(m.getName());
-          description.setLastStart(new Date());
+        method -> {
+          HealthDescription healthDescription = healthStatus.get(method.getName());
+          healthDescription.setLastStart(new Date());
           try {
-            m.invoke(applicationContext.getBean(m.getDeclaringClass()));
-            healthStatus.put(m.getName(), setDescription(description, true, "UP", ""));
+            Object userData = method.invoke(applicationContext.getBean(method.getDeclaringClass()));
+            String description = userData != null ? new ObjectMapper().writeValueAsString(userData) : "";
+            healthStatus.put(method.getName(), setDescription(healthDescription, true, "UP", description));
           } catch (Exception e) {
-            healthStatus.put(m.getName(), setDescription(description, false, "DOWN", e.getCause().getMessage()));
+            healthStatus.put(method.getName(), setDescription(healthDescription, false, "DOWN", e.getCause().getMessage()));
           }
         });
   }
