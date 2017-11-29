@@ -57,3 +57,7 @@ There are two ways of testing:
 
 1. By running the test with maven.
 2. Starting up the application and going to `localhost:8080/health`. This should show a json with the status of the application, including the extra health information.
+
+### Troubleshooting
+
+It may happen that, if you have a `@ComponentScan` definition in your configuration set up to your package, then the package `com.foryouandyourcustomers.health` is not scanned and therefore, the check will not appear. Just add that package to your component scan definition.
