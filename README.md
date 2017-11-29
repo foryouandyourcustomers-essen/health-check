@@ -1,6 +1,10 @@
+## Health-check
+
 ### Goal
 
 The main goal of this module is to enable the creation of health checks as a tool for testing the application in run time.
+
+Why would someone want to test applications in run time? The idea behind this is to have a framework that allows you to make custom health checks that can be a bit more complex than "just checking" if the connection is still alive with another services. 
 
 ### Description
 
@@ -30,7 +34,7 @@ The `health.check.basepackage` defines the base package in which the annotation 
 
 ### Usage
 
-The way of using this software is rather straight forward. Import the dependency in maven 
+Import the dependency in maven 
 
 ```
 <dependency>
@@ -41,6 +45,11 @@ The way of using this software is rather straight forward. Import the dependency
 ``` 
 
 and add the properties to your property file. At the moment the software is still not published to the maven repository so, for using it you have to clone the repo and run `mvn install`.
+
+In your bean, annotate the health checks methods with the annotation `@HealthCheck`. It will run automatically.
+
+If your method returns something that is Serializable, then the result of that will be printed in the health endpoint under the description of the last run of the check.
+
 
 ### Test
 
