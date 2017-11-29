@@ -6,7 +6,13 @@
 
     <groupId>com.foryouandyourcustomers</groupId>
     <artifactId>health-check</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
+
+    <name>Health check</name>
+    <description>The main goal of this module is to enable the creation of health checks as a tool for testing the
+        application in run time.
+    </description>
+    <url>https://github.com/foryouandyourcustomers-essen/health-check</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -25,6 +31,12 @@
             <organizationUrl>https://fes.foryouandyourcustomers.com</organizationUrl>
         </developer>
     </developers>
+    <scm>
+        <connection>scm:git:git@github.com:foryouandyourcustomers-essen/health-check.git</connection>
+        <developerConnection>scm:git:git@github.com:foryouandyourcustomers-essen/health-check.git</developerConnection>
+        <url>https://github.com/foryouandyourcustomers-essen/health-check</url>
+    </scm>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -156,6 +168,46 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
