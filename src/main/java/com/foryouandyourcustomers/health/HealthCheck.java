@@ -1,6 +1,5 @@
 package com.foryouandyourcustomers.health;
 
-
 import static com.foryouandyourcustomers.health.HealthCheckType.ONCE;
 
 import java.lang.annotation.Retention;

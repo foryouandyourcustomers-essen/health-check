@@ -32,8 +32,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomHealthIndicator
     implements HealthIndicator,
-    ApplicationContextAware,
-    ApplicationListener<ContextRefreshedEvent> {
+        ApplicationContextAware,
+        ApplicationListener<ContextRefreshedEvent> {
 
   private ConcurrentMap<String, HealthDescription> healthStatus;
   private List<Method> runOnlyOnceMethods;
@@ -54,7 +54,8 @@ public class CustomHealthIndicator
 
     HealthDescription other = new HealthDescription();
     other.setUp(true);
-    HealthDescription description = healthStatus.values().stream().filter(v -> !v.isUp()).findFirst().orElse(other);
+    HealthDescription description =
+        healthStatus.values().stream().filter(v -> !v.isUp()).findFirst().orElse(other);
 
     if (!description.isUp()) {
       return builder.down().build();
@@ -79,11 +80,12 @@ public class CustomHealthIndicator
                 .setScanners(new MethodAnnotationsScanner()));
     Set<Method> methods = reflections.getMethodsAnnotatedWith(HealthCheck.class);
 
-    methods.forEach(m -> {
-      HealthDescription description = new HealthDescription();
-      description.setMethodName(m.getName());
-      healthStatus.put(m.getName(), description);
-    });
+    methods.forEach(
+        method -> {
+          HealthDescription description = new HealthDescription();
+          description.setMethodName(method.getName());
+          healthStatus.put(method.getName(), description);
+        });
 
     runOnlyOnceMethods = getMethods(methods, ONCE);
     shortScheduledMethods = getMethods(methods, SHORT);
@@ -121,15 +123,20 @@ public class CustomHealthIndicator
           healthDescription.setLastStart(new Date());
           try {
             Object userData = method.invoke(applicationContext.getBean(method.getDeclaringClass()));
-            String description = userData != null ? new ObjectMapper().writeValueAsString(userData) : "";
-            healthStatus.put(method.getName(), setDescription(healthDescription, true, "UP", description));
+            String description =
+                userData != null ? new ObjectMapper().writeValueAsString(userData) : "";
+            healthStatus.put(
+                method.getName(), setDescription(healthDescription, true, "UP", description));
           } catch (Exception e) {
-            healthStatus.put(method.getName(), setDescription(healthDescription, false, "DOWN", e.getCause().getMessage()));
+            healthStatus.put(
+                method.getName(),
+                setDescription(healthDescription, false, "DOWN", e.getCause().getMessage()));
           }
         });
   }
 
-  private HealthDescription setDescription(HealthDescription healthDescription, boolean up, String status, String description) {
+  private HealthDescription setDescription(
+      HealthDescription healthDescription, boolean up, String status, String description) {
     healthDescription.setUp(up);
     Date lastStart = healthDescription.getLastStart();
     healthDescription.setRunDuration(new Date().getTime() - lastStart.getTime());
@@ -141,7 +148,7 @@ public class CustomHealthIndicator
   private List<Method> getMethods(Set<Method> methods, HealthCheckType type) {
     return methods
         .stream()
-        .filter(m -> m.getAnnotation(HealthCheck.class).type().equals(type))
+        .filter(method -> method.getAnnotation(HealthCheck.class).type().equals(type))
         .collect(Collectors.toList());
   }
 }
