@@ -116,6 +116,10 @@ public class CustomHealthIndicator
     runLargeScheduledCheckTests();
   }
 
+  /**
+   * Execute the methods one at the time and adds the result to health status.
+   * @param methods List of methods to execute
+   */
   private void executeMethods(List<Method> methods) {
     methods.forEach(
         method -> {
