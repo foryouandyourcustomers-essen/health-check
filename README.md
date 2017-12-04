@@ -48,7 +48,7 @@ Import the dependency in maven
 <dependency>
     <groupId>com.foryouandyourcustomers</groupId>
     <artifactId>health-check</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ``` 
 
