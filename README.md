@@ -58,6 +58,19 @@ In your bean, annotate the health checks methods with the annotation `@HealthChe
 
 If your method returns something that is Serializable, then the result of that will be printed in the health endpoint under the description of the last run of the check.
 
+In your runnable class/configuration class add the annotation `@EnableHealthCheck`.
+
+Example:
+```
+@SpringBootApplication
+@EnableHealthCheck
+public class HealthCheckRunner {
+  public static void main(String[] args) {
+    SpringApplication.run(HealthCheckRunner.class, args);
+  }
+}
+
+```
 
 ### Test
 
@@ -69,3 +82,5 @@ There are two ways of testing:
 ### Troubleshooting
 
 It may happen that, if you have a `@ComponentScan` definition in your configuration set up to your package, then the package `com.foryouandyourcustomers.health` is not scanned and therefore, the check will not appear. Just add that package to your component scan definition.
+
+
