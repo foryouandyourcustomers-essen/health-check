@@ -1,21 +1,29 @@
-## Health-check
+# Health-check
 
-### Goal
+## Motivation
 
-The main goal of this module is to enable the creation of health checks as a tool for testing the application in run time.
+Normal health-check frameworks allow you to add health checks that will be executed on the moment you call the health endpoint. If you want to add complex or time-costly operations like having checking that third parties software are available and healthy, you do not want to do this at the moment of calling the `/health` endpoint, because it may take too long to answer, it may be costly (operationally talking), it can add extra load to your application each time you check the `/health` endpoint, etc...
 
-Why would someone want to test applications in run time? The idea behind this is to have a framework that allows you to make custom health checks that can be a bit more complex than "just checking" if the connection is still alive with another services. 
+Therefore, this framework helps you by running the health checks in background and collecting the results, that afterwards are listed on in the `/health` endpoint of your application. At the same time, one of the main goals of this module is to enable the creation of health checks as a tool for testing the application in run time.
 
-### Description
+### Why would someone want to test applications in run time? 
 
-This module contains the class FyaycHealthIndicator, that is responsible for running the health checks. There are four types of health checks availables:
+The idea behind this is to have a framework that allows you to make custom health checks that can be a bit more complex than "just checking" if the connection is still alive with another services. This checks can be scheduled and run in the background of your application.
+
+### When will you use this framework? 
+
+Let's say that you have a third party system that your application/service uses and is vital for the normal functioning of your application/service. In this case, you may want to know more than "the service is reachable". You may want to know that the service provides you with the interface needed and that it answer in a certain time-span that you can find acceptable for the normal functioning of your application. 
+
+## Description
+
+This module contains the class HealthIndicator, that is responsible for running the health checks. There are four types of health checks availables:
 
 * Health checks that only run once. This health checks run as soon as the context is started up.
 * Health checks that continuously separated by a short time period (default 60000ms). This health check run for the first time as soon as the context is started up and then each `${"health.check.schedule.short"}` time.
 * Health checks that continuously separated by a medium time period (default 1200000ms). This health check run for the first time as soon as the context is started up and then each `${"health.check.schedule.medium"}` time.
 * Health checks that continuously separated by a large time period (default 36000000ms). This health check run for the first time as soon as the context is started up and then each `${"health.check.schedule.large"}` time.
 
-### Properties
+## Properties
 
 The following properties should be set up:
 
@@ -24,15 +32,15 @@ health.check.basepackage=BASE_PACKAGE #default vaule is "", meaning, all will be
 health.check.schedule.short=60000 # default
 health.check.schedule.medium=1200000 # default
 health.check.schedule.large=36000000 # default
-endpoints.health.sensitive=false # default
-management.security.enabled=false # default
+endpoints.health.sensitive=false # default (this configuration is only needed to see the json in a "nice" way when calling the /health endpoint)
+management.security.enabled=false # default (this configuration is only needed to see the json in a "nice" way when calling the /health endpoint)
 ```
 
-#### Definition of properties:
+### Definition of properties:
 
 The `health.check.basepackage` defines the base package in which the annotation `@HealthCheck` will be scanned for.
 
-### Usage
+## Usage
 
 Import the dependency in maven 
 
