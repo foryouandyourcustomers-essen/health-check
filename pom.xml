@@ -6,7 +6,7 @@
 
     <groupId>com.foryouandyourcustomers</groupId>
     <artifactId>health-check</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
     <name>Health check</name>
     <description>The main goal of this module is to enable the creation of health checks as a tool for testing the
